@@ -27,6 +27,16 @@ app.listen(3000,()=>{
 	console.log('Started on port 3000');
 });
 
+app.get('/todos',(req,res)=>{
+	Todo.find().then((todos)=>{
+		res.send({todos});
+
+	},(e)=>{
+		res.status(400).semd(e);
+
+	});
+});
+
 module.exports = {app};
 // var newUser = new User({
 // 	email:' argaria.nitish@gmail.com'
