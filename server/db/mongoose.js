@@ -6,7 +6,7 @@ let db = {
 	mlab: 'mongodb://root:root123@ds213612.mlab.com:13612/todoapp'
 }
 
-mongoose.connect(process.env.MONGODB_URI,{useNewUrlParser: true});
+mongoose.connect(process.env.MONGODB_URI);
 
 //mongoose.connect(db.mlab|| db.localhost);
 

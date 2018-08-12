@@ -56,6 +56,8 @@ UserSchema.methods.generateAuthToken = function (){
 		return token;
 	});
 };
+
+//Model method to find user providing Token
 UserSchema.statics.findByToken = function(token){
 	var User = this;
 	var decoded ;
@@ -74,6 +76,47 @@ UserSchema.statics.findByToken = function(token){
 
 	})
 };
+//Model method to find  user by cred
+ UserSchema.statics.findByCredentials = function(email,password){
+ 	var User = this;
+  return  User.findOne({email}).then((user)=>{
+		if(!user){
+ 			return new Promise.reject();
+ 		}
+		return new Promise((resolve,reject)=>{
+			bcrypt.compare(password,user.password,(err,res)=>{
+				if(res){
+					resolve(user); 
+				}
+				else{
+				reject();
+			}
+			});
+
+		});
+		
+	});
+};
+//UserSchema.statics.findByCredentials = function (email, password) {
+//  var User = this;
+
+//  return User.findOne({email}).then((user) => {
+//    if (!user) {
+//      return Promise.reject();
+ //   }
+
+    // return new Promise((resolve, reject) => {
+    //   // Use bcrypt.compare to compare password and user.password
+    //   bcrypt.compare(password, user.password, (err, res) => {
+        // if (res) {
+        //   resolve(user);
+        // } else {
+        //   reject();
+//         // }
+//       });
+//     });
+//   });
+// };
 UserSchema.pre('save',function(next) {
 	var user = this;
 
