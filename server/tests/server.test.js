@@ -146,7 +146,7 @@ describe('DELETE /todos/:id',()=>{
 				return done(err);
 			}
 			Todo.findById(_id).then((todo)=>{
-				expect(todo).toBeTruthy();     //instead of toNotExist use toBeFalsy()
+				expect(todo).toBeTruthy();     //instead of toExist use toBeTruthy()
 				done();
 
 			}).catch((e)=> done(e));
@@ -188,7 +188,8 @@ describe('/PATCH /todos/:id',()=>{
 		.expect((res)=>{
 			expect(res.body.todo.text).toBe(body.text);
 			expect(res.body.todo.completed).toBe(true);
-			expect(res.body.todo.completedAt).toBeTruthy()
+			//expect(res.body.todo.completedAt).toBeTruthy()
+			expect(typeof res.body.todo.completedAt).toBe('number')
 		})
 		.end(done);
 
@@ -225,7 +226,7 @@ describe('/PATCH /todos/:id',()=>{
 		.expect((res)=>{
 			expect(res.body.todo.text).toBe(body.text);
 			expect(res.body.todo.completed).toBe(false);
-			expect(res.body.todo.completedAt).toBeFalsy();
+			expect(res.body.todo.completedAt).toBeFalsy();   //instead of toNotExist use toBeFalsy()
 		})
 		.end(done);
 	});
@@ -270,8 +271,8 @@ describe('POST /users',()=>{
 		.send({email,password})
 		.expect(200)
 		.expect((res)=>{
-			expect(res.headers['x-auth']).toBeTruthy();// we should use bracket notation instead of . if our pbject is having hyphen
-			expect(res.body._id).toBeTruthy();
+			expect(res.headers['x-auth']).toBeTruthy();		// we should use bracket notation instead of . if our pbject is having hyphen
+			expect(res.body._id).toBeTruthy();			//instead of toExist use toBeTruthy()
 			expect(res.body.email).toBe(email);
 		})
 		.end((err)=>{
@@ -280,7 +281,7 @@ describe('POST /users',()=>{
 			}
 			User.findOne({email}).then((user)=>{
 				expect(user).toBeTruthy();
-				expect(user.password).not.toBe(password);
+				expect(user.password).not.toBe(password);			//instead of toNotBe() we have to use not.toBe()
 				done();
 			}).catch((e)=> done(e));
 		});
@@ -319,14 +320,14 @@ describe('POST /users/login',()=>{
 		})
 		.expect(200)
 		.expect((res)=>{
-			expect(res.headers['x-auth']).toBeTruthy();
+			expect(res.headers['x-auth']).toBeTruthy();		//instead of toExist use toBeTruthy()
 		})
 		.end((err,res)=>{
 			if(err){
 				return done(err);
 			}
 			User.findById(users[1]._id).then((user)=>{
-				expect(user.tokens[1]).toMatchObject({     //Instead of toInclude use toMatchObject
+				expect(user.tokens[1]).toMatchObject({     //Instead of toInclude() use toMatchObject()
 					access:'auth',
 					token:res.headers['x-auth']
 				});
